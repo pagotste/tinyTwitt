@@ -1,27 +1,26 @@
 package tinytwitt;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.*;
 
 @Entity
 @Cache
 public class Message {
-    @Id Long id; // Sera généré automatiquement
+    @Id Long idMessage; // Sera généré automatiquement
     @Index Date date;
-    String name;
     String message;
-    
-    @Parent Key parent;
+    @Index Set<Long> hashtagList = new HashSet<Long>();  
+    @Parent Key<User> parent;
     
     private Message() {}
-    public Message(String name, String message) {
-        this.name = name;
+    public Message(String name, String message, Key<User> user) {
         this.message = message;
         this.date = new Date();
-        this.parent = KeyFactory.createKey("LivreOr", "livreOr");
+        this.parent = user;
     }
     
     public Date getDate() {
@@ -30,16 +29,15 @@ public class Message {
     public void setDate(Date date) {
         this.date = date;
     }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
+
     public String getMessage() {
         return message;
     }
     public void setMessage(String message) {
         this.message = message;
+    }
+    
+    public void addHashtag(Long ht) {
+    	this.hashtagList.add(ht);
     }
 }
