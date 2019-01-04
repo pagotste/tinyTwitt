@@ -56,6 +56,7 @@ public class TwittServlet extends HttpServlet {
 				//Creer un utilisateur
 				User user = new User(req.getParameter("nom"));
 				ofy().save().entity(user).now();
+				resp.sendRedirect("/");
 			}
 			
             
