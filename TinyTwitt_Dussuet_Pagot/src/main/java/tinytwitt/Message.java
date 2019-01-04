@@ -17,7 +17,7 @@ public class Message {
     @Parent Key<User> parent;
     
     private Message() {}
-    public Message(String name, String message, Key<User> user) {
+    public Message(String message, Key<User> user) {
         this.message = message;
         this.date = new Date();
         this.parent = user;
