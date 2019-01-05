@@ -14,12 +14,14 @@ public class User {
 	@Index String name;
 	Set<Long> follow = new HashSet<Long>();
 	int followers = 0;
-	@Parent Key parent;
 	
 	private User() {} //Objectify
 	public User(String name) {
 		this.name = name;
-		this.parent = KeyFactory.createKey("Twitt", "twitt");
+	}
+	
+	public Long getId() {
+		return this.idUser;
 	}
 	
 	public void setName(String n) {
