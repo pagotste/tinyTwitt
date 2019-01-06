@@ -184,7 +184,7 @@ public class TinyTwittEndpoint {
 	
 	@ApiMethod(
             name="addmultiplefollow",
-            path="/users/{user}/followers/{nb}",
+            path="/users/{user}/follows/{nb}",
             httpMethod = HttpMethod.PUT
             )
     public void addMultiplefollowUser(@Named("user") Long n,@Named("nb") int nombre) {
@@ -199,7 +199,24 @@ public class TinyTwittEndpoint {
         for(User u : lf) {
         	user.addFollow(u.getId());
         }
-        user.setFollowers(user.getFollowers()+lf.size());
+        ofy().save().entity(user).now();
+    }
+	
+	@ApiMethod(
+            name="addmultiplefollowers",
+            path="/users/{user}/followers/{nb}",
+            httpMethod = HttpMethod.PUT
+            )
+    public void addMultiplefollowersUser(@Named("user") Long n,@Named("nb") int nombre) {
+        User user = ofy().load().type(User.class).id(n).now();
+        List<User> lf = new ArrayList<User>();
+        for(int i=0 ; i <nombre ; i++) {
+            User follower = new User("testFollower"+i);
+            follower.addFollow(n);
+            lf.add(follower);
+        }
+        ofy().save().entities(lf).now();        
+        user.setFollowers(user.getFollowers()+nombre);
         ofy().save().entity(user).now();
     }
     
