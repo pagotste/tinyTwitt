@@ -4,7 +4,7 @@ var app = angular.module('tinytwitt', []);
 app.controller('UtilisateurControle',function($scope,$http){
 	var idusermess = 5629499534213120;
 	$scope.postAjoutUtilisateur = function(){
-		$http.put("http://localhost:8080/_ah/api/tinytwitt/v1/users",$scope.nomuti).then(function successCallback(response){
+		$http.put("http://localhost:8080/_ah/api/tinytwitt/v1/users/"+ $scope.nomuti).then(function successCallback(response){
 			$scope.nomuti="";
 		}, function errorCallback(response){
 			console.log("envoi des données raté");
