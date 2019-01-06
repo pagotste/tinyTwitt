@@ -111,10 +111,13 @@ public class TinyTwittEndpoint {
 	//Methodes pour les messages
 	@ApiMethod(
 			name="postmessage",
-			path="messages",
+			path="messages/{contenu}/{auteur}/{date}",
 			httpMethod = HttpMethod.POST
 			)
-	public void createMessage(Message m) {
+	public void createMessage(Message m,@Named("contenu") String c,@Named("auteur") Long n,@Named("date") String d) {
+		m.setMessage(c);
+		m.setUsrId(n);
+		m.setDate(d);
 		List<Hashtag> htl = new ArrayList<Hashtag>();
 		String[] hashtags = m.getMessage().split("#");
 		if(hashtags.length>1) {
