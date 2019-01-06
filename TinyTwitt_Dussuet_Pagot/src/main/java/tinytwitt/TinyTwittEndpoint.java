@@ -114,9 +114,8 @@ public class TinyTwittEndpoint {
 			path="messages/{contenu}/{auteur}/{date}",
 			httpMethod = HttpMethod.POST
 			)
-	public void createMessage(Message m,@Named("contenu") String c,@Named("auteur") Long n,@Named("date") String d) {
-		m.setMessage(c);
-		m.setUsrId(n);
+	public void createMessage(@Named("contenu") String c,@Named("auteur") Long n,@Named("date") String d) {
+		Message m = new Message(c,n);
 		m.setDate(d);
 		List<Hashtag> htl = new ArrayList<Hashtag>();
 		String[] hashtags = m.getMessage().split("#");
@@ -180,26 +179,74 @@ public class TinyTwittEndpoint {
         	User u = new User("user"+i);
         	lu.add(u);
         }
-        ofy().save().entities(lu);
+        ofy().save().entities(lu).now();
     }
 	
 	@ApiMethod(
-            name="addmultiplefollowers",
-            path="{user}/followers/{nb}",
+            name="addmultiplefollow",
+            path="/users/{user}/followers/{nb}",
             httpMethod = HttpMethod.PUT
             )
-    public void addMultiplefollowersUser(@Named("user") Long n,@Named("nb") int nombre) {
+    public void addMultiplefollowUser(@Named("user") Long n,@Named("nb") int nombre) {
         User user = ofy().load().type(User.class).id(n).now();
         List<User> lf = new ArrayList<User>();
         for(int i=0 ; i <nombre ; i++) {
-            User follower = new User("follower"+i);
-            lf.add(follower);
-            }
+            User follow = new User("testFollow"+i);
+            follow.setFollowers(1);
+            lf.add(follow);
+        }
         ofy().save().entities(lf).now();
         for(User u : lf) {
         	user.addFollow(u.getId());
         }
         user.setFollowers(user.getFollowers()+lf.size());
-        ofy().save().entity(user);
+        ofy().save().entity(user).now();
     }
+    
+	@ApiMethod(
+			name = "createmultiplemessages",
+			path="messages/ajout/{id}/{nb}",
+			httpMethod = HttpMethod.PUT
+			)
+	public void addMultipleMessages(@Named("id") Long id, @Named("nb") int nb) {
+		List<Message> lm = new ArrayList<Message>();
+		for (int i = 0; i < nb ; i++) {
+			Message m = new Message("message"+i,id);
+			lm.add(m);
+		}
+		ofy().save().entities(lm).now();
+	}
+
+	@ApiMethod(
+			name = "createmultiplemessagesforhashtag",
+			path="messages/{id}/{nb}",
+			httpMethod = HttpMethod.PUT
+			)
+	public void addMultipleMessagesHashtag(@Named("id") Long id, @Named("nb") int nb) {
+		List<Message> lm = new ArrayList<Message>();
+		Hashtag h = new Hashtag("#test");
+		for (int i = 0; i < nb ; i++) {
+			Message m = new Message("message"+i+" #test",id);
+			lm.add(m);
+		}
+		ofy().save().entities(lm).now();
+		for (Message mess : lm) {
+			h.addPost(mess.getIdMessage());
+		}
+		ofy().save().entity(h).now();		
+	}
+
+	@ApiMethod(
+			name = "deleteall",
+			path="",
+			httpMethod = HttpMethod.DELETE
+			)
+	public void deleteAll() {
+		List<Message> lm = ofy().load().type(Message.class).list();
+		List<User> lu =  ofy().load().type(User.class).list();
+		List<Hashtag> lh =  ofy().load().type(Hashtag.class).list();
+		ofy().delete().entities(lh).now();
+		ofy().delete().entities(lm).now();
+		ofy().delete().entities(lu).now();
+	}
 }
