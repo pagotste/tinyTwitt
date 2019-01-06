@@ -30,6 +30,8 @@ public class TinyTwittEndpoint {
 	}
 	
 	//Methodes pour les utilisateurs
+	
+	//TODO : update quand angularjs fonctionnel
 	@ApiMethod(
 			name="newuser",
 			path = "users/{nom}",
@@ -110,7 +112,7 @@ public class TinyTwittEndpoint {
 	@ApiMethod(
 			name="postmessage",
 			path="messages",
-			httpMethod = HttpMethod.PUT
+			httpMethod = HttpMethod.POST
 			)
 	public void createMessage(Message m) {
 		List<Hashtag> htl = new ArrayList<Hashtag>();
@@ -160,4 +162,41 @@ public class TinyTwittEndpoint {
 		}
 		return lm;
 	}
+	
+	//Methodes de test
+	
+	//TODO: update quand createuser a jour
+	@ApiMethod(
+            name="createmultipleusers",
+            path = "users/ajout/{nb}",
+            httpMethod = HttpMethod.PUT
+            )
+    public void createMultipleUsers(@Named("nb") Integer n) {
+		List<User> lu = new ArrayList<User>();
+        for(int i = 0; i< n ; i++) {
+        	User u = new User("user"+i);
+        	lu.add(u);
+        }
+        ofy().save().entities(lu);
+    }
+	
+	@ApiMethod(
+            name="addmultiplefollowers",
+            path="{user}/followers/{nb}",
+            httpMethod = HttpMethod.PUT
+            )
+    public void addMultiplefollowersUser(@Named("user") Long n,@Named("nb") int nombre) {
+        User user = ofy().load().type(User.class).id(n).now();
+        List<User> lf = new ArrayList<User>();
+        for(int i=0 ; i <nombre ; i++) {
+            User follower = new User("follower"+i);
+            lf.add(follower);
+            }
+        ofy().save().entities(lf).now();
+        for(User u : lf) {
+        	user.addFollow(u.getId());
+        }
+        user.setFollowers(user.getFollowers()+lf.size());
+        ofy().save().entity(user);
+    }
 }
