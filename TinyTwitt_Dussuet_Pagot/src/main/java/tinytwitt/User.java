@@ -12,7 +12,7 @@ import com.googlecode.objectify.annotation.*;
 public class User {
 	@Id Long idUser; //généré
 	@Index String name;
-	Set<Long> follow = new HashSet<Long>();
+	@Index Set<Long> follow = new HashSet<Long>();
 	int followers = 0;
 	
 	private User() {} //Objectify
