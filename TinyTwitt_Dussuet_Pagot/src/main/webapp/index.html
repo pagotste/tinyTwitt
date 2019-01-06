@@ -8,7 +8,7 @@
 </head>
 <body ng-app="tinytwitt" ng-controller='UtilisateurControle'>
 		
-		<a href="https://github.com/pagotste/tinyTwitt"> lien vers nos sources code sur github</a>
+		<a href="https://github.com/pagotste/tinyTwitt"> Lien vers notre code source sur github</a>
 		<h3>Creer un utilisateur</h3>
 		<form novalidate>
 			<p>
@@ -18,7 +18,7 @@
 				<button ng-click="postAjoutUtilisateur()"> creer </button>
 			</p>
 		</form>
-		<h2> Vous utiliser ces services sous l'utilisateur avec l'id : 5629499534213120</h2>
+		<h2> Vous utilisez ces services sous avec l'utilisateur 5629499534213120</h2>
 		<h3>Nouveau message</h3>
 		<form >
 			<p>
@@ -41,7 +41,7 @@
 		
 		<div>
 		<h3 ng-init="getlistfollow()"> 
-		liste des utilisateurs qu'il suit
+		Liste des utilisateurs qu'il suit
 		</h3>
 		<p ng-repeat="f in dataF">
 			{{f}}
@@ -63,6 +63,6 @@
 				<button ng-click="unfollow()"> ne plus le suivre </button>
 			</p>
 		</form>
-		<p> temps d'execution de la derniere requete : {{tempo}}</p>
+		<p> Temps d'execution de la derniere requete : {{tempo}}</p>
 	</body>
 </html>
