@@ -64,7 +64,7 @@ public class TinyTwittEndpoint {
 	public void followUser(@Named("id") Long n, @Named("user") Long u) {
 		User user = ofy().load().type(User.class).id(n).now();
 		User follow = ofy().load().type(User.class).id(u).now();
-		if(!user.follow.contains(u)) {
+		if(!user.follow.contains(u) && n != u) {
 			follow.followers++;
 			user.addFollow(u);
 			ofy().save().entities(follow,user).now();
@@ -79,7 +79,7 @@ public class TinyTwittEndpoint {
 	public void unfollowUser(@Named("id") Long n, @Named("user") Long u) {
 		User user = ofy().load().type(User.class).id(n).now();
 		User follow = ofy().load().type(User.class).id(u).now();
-		if(user.follow.contains(u)) {
+		if(user.follow.contains(u) && n != u) {
 			follow.followers--;
 			user.removeFollow(u);
 			ofy().save().entities(follow,user).now();
