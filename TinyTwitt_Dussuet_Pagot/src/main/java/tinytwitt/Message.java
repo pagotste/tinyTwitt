@@ -1,5 +1,8 @@
 package tinytwitt;
 
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,14 +27,21 @@ public class Message {
     }
     
     public Date getDate() {
-        return date;
+        return this.date;
     }
-    public void setDate(Date date) {
-        this.date = date;
+    
+    public void setDate(String d) {
+    	Date date = null;
+		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy:HH:mm");
+		try {
+			date = DATE_FORMAT.parse(d);
+			this.date = date;
+		} catch (ParseException e) {
+		}
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
     public void setMessage(String message) {
         this.message = message;
@@ -40,4 +50,13 @@ public class Message {
     public void addHashtag(Long ht) {
     	this.hashtagList.add(ht);
     }
+    
+    public void setParent(Key<User> p) {
+    	this.parent = p;
+    }
+    
+    public String getParentString(){
+    	return this.parent.toWebSafeString();
+    }
+    
 }

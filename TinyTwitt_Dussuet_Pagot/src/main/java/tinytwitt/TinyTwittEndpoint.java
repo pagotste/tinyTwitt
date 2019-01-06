@@ -5,7 +5,6 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.config.Named;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 
@@ -24,8 +23,11 @@ import tinytwitt.User;
 public class TinyTwittEndpoint {
 	static {
 		ObjectifyService.register(User.class);
+		ObjectifyService.register(Message.class);
+		ObjectifyService.register(Hashtag.class);
 	}
 	
+	//Methodes pour les utilisateurs
 	@ApiMethod(
 			name="newuser",
 			path = "users",
@@ -56,6 +58,7 @@ public class TinyTwittEndpoint {
 		return u;
 	}
 	
+	//Methodes pour les follows
 	@ApiMethod(
 			name="addfollow",
 			path="users/{id}/follows/{user}",
@@ -65,7 +68,7 @@ public class TinyTwittEndpoint {
 		User user = ofy().load().type(User.class).id(n).now();
 		User follow = ofy().load().type(User.class).id(u).now();
 		if(!user.follow.contains(u) && n != u) {
-			follow.followers++;
+			follow.setFollowers(follow.getFollowers()+1);
 			user.addFollow(u);
 			ofy().save().entities(follow,user).now();
 		} 
@@ -80,7 +83,7 @@ public class TinyTwittEndpoint {
 		User user = ofy().load().type(User.class).id(n).now();
 		User follow = ofy().load().type(User.class).id(u).now();
 		if(user.follow.contains(u) && n != u) {
-			follow.followers--;
+			follow.setFollowers(follow.getFollowers()-1);
 			user.removeFollow(u);
 			ofy().save().entities(follow,user).now();
 		} 
@@ -98,5 +101,32 @@ public class TinyTwittEndpoint {
 			lu.add(ofy().load().type(User.class).id(l).now());
 		}
 		return lu;
+	}
+	
+	//Methodes pour les messages
+	@ApiMethod(
+			name="postmessage",
+			path="messages/{id}",
+			httpMethod = HttpMethod.PUT
+			)
+	public void createMessage(Message m, @Named("id") Long u) {		
+		Key<User> k = Key.create(User.class,u);
+		m.setParent(k);
+		ofy().save().entity(m).now();
+	}
+	
+	@ApiMethod(
+			name="listmessages",
+			path="messages/{id}",
+			httpMethod = HttpMethod.GET
+	)
+	public List<Message> listMessages(@Named("id") Long id){
+		Key<User> k = Key.create(User.class,id);
+		User u = ofy().load().key(k).now();
+		List<Message> lm = ofy().load().type(Message.class).ancestor(k).order("-date").list();
+		for (Long follow : u.follow) {
+			lm.addAll(ofy().load().type(Message.class).ancestor(Key.create(User.class,follow)).order("-date").list());
+		}
+		return lm;
 	}
 }

@@ -9,12 +9,10 @@ import com.google.appengine.api.datastore.KeyFactory;
 public class Hashtag {
 	@Id Long idHt; //généré
 	@Index String chaine;
-	@Parent Key parent;
 	
 	private Hashtag() {}
 	public Hashtag(String s) {
 		this.chaine = s;
-		this.parent = KeyFactory.createKey("Twitt", "twitt");
 	}
 	
 	public void setChaine(String c) {
