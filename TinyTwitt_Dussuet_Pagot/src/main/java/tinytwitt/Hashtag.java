@@ -1,14 +1,19 @@
 package tinytwitt;
 
 import com.googlecode.objectify.annotation.*;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
 @Entity
 @Cache
 public class Hashtag {
-	@Id Long idHt; //généré
-	@Index String chaine;
+	@Id String chaine;
+	Set<Long> posts = new HashSet<Long>();
 	
 	private Hashtag() {}
 	public Hashtag(String s) {
@@ -21,6 +26,10 @@ public class Hashtag {
 	
 	public String getChaine() {
 		return this.chaine;
+	}
+	
+	public void addPost(Long id) {
+		this.posts.add(id);
 	}
 	
 }

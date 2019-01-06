@@ -7,6 +7,8 @@ import com.google.api.server.spi.config.ApiMethod.HttpMethod;
 import com.google.api.server.spi.config.Named;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.Result;
+import com.googlecode.objectify.cmd.Query;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
@@ -106,21 +108,21 @@ public class TinyTwittEndpoint {
 	//Methodes pour les messages
 	@ApiMethod(
 			name="postmessage",
-			path="messages/{id}",
+			path="messages",
 			httpMethod = HttpMethod.PUT
 			)
-	public void createMessage(Message m, @Named("id") Long u) {		
-		Key<User> k = Key.create(User.class,u);
-		m.setParent(k);
-		
+	public void createMessage(Message m) {
 		List<Hashtag> htl = new ArrayList<Hashtag>();
 		String[] hashtags = m.getMessage().split("#");
 		if(hashtags.length>1) {
+			ofy().save().entity(m).now();
 			for(int i = 1; i<hashtags.length;i++) {
-				Hashtag h = new Hashtag("#"+hashtags[i]);
+				Hashtag h = ofy().load().type(Hashtag.class).id("#"+hashtags[i]).now();
+				if(h == null ) h = new Hashtag("#"+hashtags[i]);
+				h.addPost(m.getIdMessage());
 				htl.add(h);
 			}
-			ofy().save().entity(m).now();
+			
 			ofy().save().entities(htl).now();
 		} else {
 			ofy().save().entity(m).now();
@@ -136,9 +138,24 @@ public class TinyTwittEndpoint {
 	public List<Message> listMessages(@Named("id") Long id){
 		Key<User> k = Key.create(User.class,id);
 		User u = ofy().load().key(k).now();
-		List<Message> lm = ofy().load().type(Message.class).ancestor(k).order("-date").list();
-		for (Long follow : u.follow) {
-			lm.addAll(ofy().load().type(Message.class).ancestor(Key.create(User.class,follow)).order("-date").list());
+		List<Long> users = new ArrayList<Long>();
+		users.add(id);
+		users.addAll(u.follow);
+		List<Message> lm = ofy().load().type(Message.class).filter("usrId in", users).order("-date").list();
+		return lm;
+	}
+	
+	//Methodes pour hashtags
+	@ApiMethod(
+			name="consulterhashtag",
+			path="hashtags/{id}",
+			httpMethod = HttpMethod.GET
+			)
+	public List<Message> consulterHashtag(@Named("id") String id){
+		Hashtag h = ofy().load().type(Hashtag.class).id(id).now();
+		List<Message> lm = new ArrayList<Message>();
+		for (Long l : h.posts) {
+			lm.add(ofy().load().type(Message.class).id(l).now());
 		}
 		return lm;
 	}

@@ -7,23 +7,24 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.*;
 
 @Entity
-@Cache
 public class Message {
     @Id Long idMessage; // Sera généré automatiquement
     @Index Date date;
-    String message;
-    @Index Set<Long> hashtagList = new HashSet<Long>();  
-    @Parent Key<User> parent;
+    String message;  
+    @Index Long usrId;
     
     private Message() {}
-    public Message(String message, Key<User> user) {
+    public Message(String message, Long user) {
         this.message = message;
         this.date = new Date();
-        this.parent = user;
+        this.usrId = user;
+    }
+    
+    public Long getIdMessage() {
+    	return this.idMessage;
     }
     
     public Date getDate() {
@@ -47,16 +48,12 @@ public class Message {
         this.message = message;
     }
     
-    public void addHashtag(Long ht) {
-    	this.hashtagList.add(ht);
+    public void setUsrId(Long l) {
+    	this.usrId = l;
     }
     
-    public void setParent(Key<User> p) {
-    	this.parent = p;
-    }
-    
-    public String getParentString(){
-    	return this.parent.toWebSafeString();
+    public Long getUsrId(){
+    	return this.usrId;
     }
     
 }
