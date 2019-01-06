@@ -112,7 +112,20 @@ public class TinyTwittEndpoint {
 	public void createMessage(Message m, @Named("id") Long u) {		
 		Key<User> k = Key.create(User.class,u);
 		m.setParent(k);
-		ofy().save().entity(m).now();
+		
+		List<Hashtag> htl = new ArrayList<Hashtag>();
+		String[] hashtags = m.getMessage().split("#");
+		if(hashtags.length>1) {
+			for(int i = 1; i<hashtags.length;i++) {
+				Hashtag h = new Hashtag("#"+hashtags[i]);
+				htl.add(h);
+			}
+			ofy().save().entity(m).now();
+			ofy().save().entities(htl).now();
+		} else {
+			ofy().save().entity(m).now();
+		}
+		
 	}
 	
 	@ApiMethod(
