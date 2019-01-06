@@ -1,56 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head lang="fr">
+<head>
 <meta charset="UTF8">
 <title>TinyTwitt</title>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="app.js"></script>
 </head>
 <body ng-app="tinytwitt" ng-controller='UtilisateurControle'>
-		<h1>Créer un utilisateur</h1>
+		
+		<a href="https://github.com/pagotste/tinyTwitt"> lien vers nos sources code sur github</a>
+		<h3>Creer un utilisateur</h3>
 		<form novalidate>
 			<p>
 				<label>Nom d'utilisateur : <input type="text" name="nom" ng-model="nomuti" /></label>
 			</p>
 			<p>
-				<button ng-click="postAjoutUtilisateur()"> créer </button>
+				<button ng-click="postAjoutUtilisateur()"> creer </button>
 			</p>
 		</form>
-
-		<h1>Nouveau message</h1>
+		<h2> Vous utiliser ces services sous l'utilisateur avec l'id : 5629499534213120</h2>
+		<h3>Nouveau message</h3>
 		<form >
 			<p>
 				<label> Message : <br />
-				<textarea name="message" style="width: 200px; height: 100px;" ng-model="message.contenu"></textarea></label><br />
-				<label> Utilisateur : <input type="text" name="user" ng-model="message.iduti"/></label>
+				<textarea type="text" name="message" style="width: 200px; height: 100px;" ng-model="mcontenu"></textarea></label><br />
+				<label> Utilisateur : <input type="text" name="user" ng-model="miduti"/></label>
+				<label> Date : <input type="text" name="date" ng-model="mdate"/></label>
 			</p>
 			<p>
-				<button ng-click="postAjoutMessage(message,nomuti)"> poster </button>
+				<button ng-click="postAjoutMessage()"> poster </button>
 			</p>
 		</form>
-
+		
 		<h1>Timeline</h1>
 		<div ng-init="getMessages()">
 			<p ng-repeat="x in data">
 			message : {{x.message}} poste par {{x.usrId}}
 			</p>
 		</div>
-		<h2> liste des hastag de l'utilisateur</h2>
-		<div ng-init="getHashtags()">
-			<p ng-repeat="h in dataH">
-			hashtag : {{h}} poste par {{h.usrId}}
-			</p>
-		</div>
-		<h3> liste des utilisateurs et leur id</h3>
-		<div ng-init="getUsers()">
-		<p ng-repeat="u in dataUsers">
-			{{u}}
-		</p>
-		</div>
+		
 		<div>
-		<p>
-		<button ng-click="getlistfollow()"> afficher les utilisateurs qu'il suit</button>
-		</p>
+		<h3 ng-init="getlistfollow()"> 
+		liste des utilisateurs qu'il suit
+		</h3>
 		<p ng-repeat="f in dataF">
 			{{f}}
 		</p>
@@ -71,6 +63,6 @@
 				<button ng-click="unfollow()"> ne plus le suivre </button>
 			</p>
 		</form>
-		
+		<p> temps d'execution de la dernière requete : {{tempo}}</p>
 	</body>
 </html>
