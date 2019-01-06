@@ -32,10 +32,11 @@ public class TinyTwittEndpoint {
 	//Methodes pour les utilisateurs
 	@ApiMethod(
 			name="newuser",
-			path = "users",
+			path = "users/{nom}",
 			httpMethod = HttpMethod.PUT
 			)
-	public void createUser(User u) {
+	public void createUser(User u,@Named("nom") String n) {
+		u.setName(n);
 		ofy().save().entity(u);
 	}
 	
