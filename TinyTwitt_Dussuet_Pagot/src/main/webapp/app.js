@@ -30,7 +30,7 @@ app.controller('UtilisateurControle',function($scope,$http){
 	}
 	$scope.getMessages = function(){
 		var temps = Date.now();
-		$http.get("http://localhost:8080/_ah/api/tinytwitt/v1/messages/"+ $scope.iduser).then(function(response){
+		$http.get("http://localhost:8080/_ah/api/tinytwitt/v1/messages/"+ $scope.iduser+"/"+10).then(function(response){
 			$scope.data = response.data.items;
 			temps = Date.now() - temps;
 			$scope.tempo = temps;
