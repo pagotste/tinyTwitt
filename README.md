@@ -10,7 +10,7 @@ Lien vers l'API explorer : https://apis-explorer.appspot.com/apis-explorer/?base
   - 1000 followers : 45 (moy = 179ms)
   - 5000 followers : 42 (moy = 172ms )
   
- Remarque : La variance est faible car poster un twitt ne dépend pas du nombre de followers dans notre modèle, les temps varient peu
+ Remarque : La variance est faible car poster un twitt ne dépend pas du nombre de followers dans notre modèle, les temps varient peu.
  
 ## Extraire...
   - 10 twitts pour 
@@ -30,4 +30,5 @@ Lien vers l'API explorer : https://apis-explorer.appspot.com/apis-explorer/?base
   - 50 messages : 170 (moy = 676ms)
   - 1000 messages : 2803 (moy = 8987 ms)
   - 5000 messages : 3743 (moy = 37721 ms)
-Remarque : Les messages n'étant pas dans le cache (à cause d'un problème lors des query), le temps pour récupérer des messages est probablement plus long que ce qu'il devrait être
+  
+Remarque : Les messages n'étant pas dans le cache (à cause d'un problème lors des query), le temps pour récupérer des messages est probablement plus long que ce qu'il devrait être...
