@@ -2,6 +2,7 @@ package tinytwitt;
 
 import com.googlecode.objectify.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +14,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 @Cache
 public class Hashtag {
 	@Id String chaine;
-	Set<Long> posts = new HashSet<Long>();
+	List<Long> posts = new ArrayList<Long>();
 	
 	private Hashtag() {}
 	public Hashtag(String s) {

@@ -137,30 +137,32 @@ public class TinyTwittEndpoint {
 	
 	@ApiMethod(
 			name="listmessages",
-			path="messages/{id}",
+			path="messages/{id}/{nbposts}",
 			httpMethod = HttpMethod.GET
 	)
-	public List<Message> listMessages(@Named("id") Long id){
+	public List<Message> listMessages(@Named("id") Long id, @Named("nbposts") int nb){
 		Key<User> k = Key.create(User.class,id);
 		User u = ofy().load().key(k).now();
 		List<Long> users = new ArrayList<Long>();
 		users.add(id);
 		users.addAll(u.follow);
-		List<Message> lm = ofy().load().type(Message.class).filter("usrId in", users).order("-date").list();
+		List<Message> lm = ofy().load().type(Message.class).filter("usrId in", users).order("-date").limit(nb).list();
 		return lm;
 	}
 	
 	//Methodes pour hashtags
 	@ApiMethod(
 			name="consulterhashtag",
-			path="hashtags/{id}",
+			path="hashtags/{id}/{nbposts}",
 			httpMethod = HttpMethod.GET
 			)
-	public List<Message> consulterHashtag(@Named("id") String id){
+	public List<Message> consulterHashtag(@Named("id") String id, @Named("nbposts") int nb){
 		Hashtag h = ofy().load().type(Hashtag.class).id(id).now();
 		List<Message> lm = new ArrayList<Message>();
-		for (Long l : h.posts) {
-			lm.add(ofy().load().type(Message.class).id(l).now());
+		int i = h.posts.size()-1;
+		while (i >= h.posts.size()-nb && i >=0 ) {
+			lm.add(ofy().load().type(Message.class).id(h.posts.get(i)).now());
+			i--;
 		}
 		return lm;
 	}
