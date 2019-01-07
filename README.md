@@ -13,15 +13,15 @@ Lien vers l'API explorer : https://apis-explorer.appspot.com/apis-explorer/?base
  Remarque : La variance est faible car poster un twitt ne dépend pas du nombre de followers dans notre modèle, les temps varient peu
  
 ## Extraire...
-  10 twitts pour 
+  - 10 twitts pour 
     - 100 followers : 
     - 1000 followers : 37 (moy = 167ms)
     - 5000 followers :
-  50 twitts pour
+  - 50 twitts pour
     - 100 followers :
     - 1000 followers : 47 (moy = 217ms)
     - 5000 followers :
-  100 twitts pour
+  - 100 twitts pour
     - 100 followers :
     - 1000 followers : 39 (moy = 198ms)
     - 5000 followers :
