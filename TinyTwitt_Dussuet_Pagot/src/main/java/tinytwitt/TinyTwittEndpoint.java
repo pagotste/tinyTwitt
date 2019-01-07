@@ -141,11 +141,10 @@ public class TinyTwittEndpoint {
 			httpMethod = HttpMethod.GET
 	)
 	public List<Message> listMessages(@Named("id") Long id, @Named("nbposts") int nb){
-		Key<User> k = Key.create(User.class,id);
-		User u = ofy().load().key(k).now();
+		User u = ofy().load().type(User.class).id(id).now();
 		List<Long> users = new ArrayList<Long>();
 		users.add(id);
-		users.addAll(u.follow);
+		if(u.follow.size() > 0 ) users.addAll(u.follow);
 		List<Message> lm = ofy().load().type(Message.class).filter("usrId in", users).order("-date").limit(nb).list();
 		return lm;
 	}

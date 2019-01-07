@@ -1,0 +1,11 @@
+<!-- Indices written at Mon, 7 Jan 2019 02:49:09 CET -->
+
+<datastore-indexes autoGenerate="true">
+
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="Message" ancestor="false" source="auto">
+        <property name="usrId" direction="asc"/>
+        <property name="date" direction="desc"/>
+    </datastore-index>
+
+</datastore-indexes>
